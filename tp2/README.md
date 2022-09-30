@@ -25,12 +25,14 @@ Dans l'image binaire ci-dessous, utiliser un opérateur pour conserver uniquemen
 ### Amas d'objets
 
  Dans l'image ci-dessous conserver les amas d'objets, en gardant uniquement les points  situés à une distance de 50 pixels (environ) d'un autre point.
+
 <img src="amas.png" width="400"> 
 
 
 ### Correction d'illumination
 
 Le but est d'isoler les chiffres de l'image ci-dessous. 
+
 <img src="numbers.png" width="400"> 
 
 La démarche proposée est la suivante :
@@ -42,6 +44,7 @@ La démarche proposée est la suivante :
 ### Rayures
 
 Trouver un opérateur permettant de supprimer les rayures noires dans cette image :
+
 <img src="rayures.jpg" width="400"> 
 
 
