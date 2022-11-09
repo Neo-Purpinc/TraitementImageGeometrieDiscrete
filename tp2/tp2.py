@@ -1,9 +1,11 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from skimage import (io, morphology)
-
+from scipy import ndimage as ndi   
 def hit_or_miss_transform(img:np.ndarray, struct1:np.ndarray, struct2:np.ndarray):
-    return np.logical_and(morphology.erosion(img, struct1), morphology.erosion(1-img, struct2))
+    # binarize image
+    img = (img > 0.5).astype(np.uint8)
+    return np.logical_and(morphology.binary_erosion(img, struct1), morphology.binary_erosion(1-img, struct2))
 
 def white_tophat(img:np.ndarray, struct:np.ndarray):
     print(img - morphology.opening(img, struct))
@@ -13,7 +15,8 @@ def black_tophat(img:np.ndarray, struct:np.ndarray):
     return morphology.closing(img, struct) - img   
 
 def ouverture_annulaire(img:np.ndarray, diametre:int):
-    return morphology.opening(img, morphology.disk(diametre))
+    img = (img > 0.5).astype(np.uint8)
+    return np.logical_and(img,morphology.binary_dilation(img, morphology.disk(diametre)))
 
 def gradient_morphologique_interne(img:np.ndarray, struct:np.ndarray):
     return img - morphology.erosion(img, struct)   
@@ -24,32 +27,37 @@ def gradient_morphologique_externe(img:np.ndarray, struct:np.ndarray):
 def debug():
     fig,ax = plt.subplots(7, 3, figsize=(10, 10))
     fig.set_facecolor('gray')
-    img = io.imread('./tp2/amas.png', as_gray=True)
-    # img = np.array([
-    #     [0,0,0,0,1,0,0,0,1,1],
-    #     [0,1,1,1,0,1,0,0,0,1],
-    #     [0,1,0,1,0,1,0,0,0,1],
-    #     [0,1,1,1,0,1,0,0,0,1],
-    #     [0,0,0,0,1,0,0,0,1,1],
-    #     [0,0,0,0,1,0,0,0,1,1],
-    #     [0,1,0,0,1,0,0,0,1,1],
-    #     [0,1,1,0,1,0,0,0,1,1],
-    #     [0,1,1,1,1,0,0,0,1,1],
-    #     [0,1,1,1,1,1,1,0,1,1],
-    # ], dtype=np.uint8)
-    # img = np.array([[2, 3, 3, 3, 2],
-    #                 [3, 4, 5, 4, 3],
-    #                 [3, 5, 9, 5, 3],
-    #                 [3, 4, 5, 4, 3],
-    #                 [2, 3, 3, 3, 2]], dtype=np.uint8)
-    # add a white square
+    img = io.imread('./tp2/numbers.png', as_gray=True)
+    ##### TEST HMT #####
+    # img = np.array((
+    # [0, 0, 0, 0, 0, 0, 0, 0],
+    # [0, 255, 255, 255, 0, 0, 0, 255],
+    # [0, 255, 255, 255, 0, 0, 0, 0],
+    # [0, 255, 255, 255, 0, 255, 0, 0],
+    # [0, 0, 255, 0, 0, 0, 0, 0],
+    # [0, 0, 255, 0, 0, 255, 255, 0],
+    # [0,255, 0, 255, 0, 0, 255, 0],
+    # [0, 255, 255, 255, 0, 0, 0, 0]), dtype="uint8")
+    ##### TEST OUVERTURE ANNULAIRE #####
+    img = np.array((
+    [0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 1, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 1, 0, 1, 0, 0, 0, 1, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 1, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0]), dtype="uint8")
     ax[0, 1].imshow(img, cmap='gray')
     ax[0, 1].set_title('Image de base')
 
-    ax[1, 0].imshow(hit_or_miss_transform(img, np.array([[0, 1, 0], [1, 1, 1], [0, 1, 0]]), np.array([[1, 0, 1], [0, 0, 0], [1, 0, 1]])), cmap='gray')
+    structA = np.array([[0, 1, 0], [1, 0, 1], [0, 1, 0]])
+    structB = np.array([[0, 0, 0], [0, -1, 0], [0, 0, 0]])
+    ax[1, 0].imshow(hit_or_miss_transform(img,structA,structB), cmap='gray')
     ax[1, 0].set_title('HMT')
-    ax[1, 2].imshow(img, cmap='gray')
-    ax[1, 2].set_title('Pas de fonction HMT dans skimage')
+    ax[1, 2].imshow(ndi.binary_hit_or_miss(img,structA,structB), cmap='gray')
+    ax[1, 2].set_title('Ndimage HMT')
 
     ax[2, 0].imshow(white_tophat(img, morphology.square(3)), cmap='gray')
     ax[2, 0].set_title('White tophat')
