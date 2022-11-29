@@ -14,6 +14,7 @@ Pour les jeux de tests, considérer des images suffisamment variées et représe
 
 1.  Implémenter en Python deux fonctions permettant de calculer les maxima régionaux et les minima régionaux d'une image. Vous pourrez vous appuyer sur le pseudo-code ci-dessous :
 ```
+Algorithme : calcul des maxima régionaux
 Entrée : image f
 Sortie : image binaire M contenant les maxima régionaux de f (M[p]=255 si et seulment si p appartient à un maximum régional)
 
