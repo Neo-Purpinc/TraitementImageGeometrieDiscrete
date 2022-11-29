@@ -16,7 +16,7 @@ Pour les jeux de tests, considérer des images suffisamment variées et représe
 ```
 Algorithme : calcul des maxima régionaux
 Entrée : image f
-Sortie : image binaire M contenant les maxima régionaux de f (M[p]=255 si et seulment si p appartient à un maximum régional)
+Sortie : image binaire M contenant les maxima régionaux de f (M[p]=255 si et seulement si p appartient à un maximum régional)
 
 Pour tous les points p de M faire :
     M[p]=255  // au départ tous les points sont "candidats"
