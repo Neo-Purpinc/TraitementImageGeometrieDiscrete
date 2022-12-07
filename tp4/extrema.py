@@ -77,4 +77,8 @@ def display(img):
     fig.tight_layout()
     plt.show()
 
-display(skimage.data.camera())
+display(np.array([[0,0,0,1,0,0,0],
+                    [0,0,0,1,0,0,0],
+                    [0,0,0,1,0,0,0],
+                    [1,1,1,1,1,1,1],
+                    [0,0,0,1,0,0,0]], dtype=np.uint8))
